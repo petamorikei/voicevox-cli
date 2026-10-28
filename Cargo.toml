@@ -1,0 +1,31 @@
+[package]
+name = "voicevox-cli"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+authors = ["Petamori Kei <petamorikei@gmail.com>"]
+description = "A command-line text-to-speech tool built on VOICEVOX CORE"
+readme = "README.md"
+license = "MIT"
+keywords = ["voicevox", "tts", "text-to-speech", "cli", "audio"]
+categories = ["command-line-utilities", "multimedia::audio"]
+publish = false
+
+[[bin]]
+name = "vvsay"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+dirs = "6.0"
+libc = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.9"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+typed_floats = "1.0.7"
+voicevox_core = { git = "https://github.com/VOICEVOX/voicevox_core.git", tag = "0.17.1", features = ["load-onnxruntime"] }
+
+[dev-dependencies]
+tempfile = "3"
