@@ -39,19 +39,33 @@ cargo install --path .
 ### VOICEVOX CORE の実行ファイル類のダウンロード
 
 `vvsay` には VOICEVOX ONNX Runtime、Open JTalk 辞書、音声モデル（VVM ファイル）が必要です。
-公式のダウンローダーで取得してください。**途中で ONNX Runtime と音声モデルの利用規約への同意を求められます。**
+ターミナルで次のコマンドを実行してください。
+
+```bash
+vvsay --setup
+```
+
+公式の VOICEVOX CORE ダウンローダー（0.17.1、チェックサム検証済み）を取得して実行します。
+**ダウンローダーが ONNX Runtime と音声モデルの利用規約への同意を求めるので、内容を読んでご自身で回答してください。**
+通常は vvsay が代わりに回答することはありません。規約を読んで同意したうえで自動化する場合（CI など）は `vvsay --setup --accept-terms` を使ってください。規約の本文は表示されたまま、確認に vvsay が「同意する」と回答します。導入済みの場合は、再ダウンロードの確認に標準入力から yes を渡さない限り何もしません。
+
+- 保存先は `~/.local/share/vvsay`（設定ファイルの `assets_dir` で変更可能）です。
+- トーク用モデルだけを取得します（ソング用は使いません）。
+- GitHub のレートリミットに当たる場合は `GH_TOKEN=$(gh auth token) vvsay --setup` で実行してください。
+- 導入済みの状態で実行すると、再ダウンロードするか確認されます。
+
+<details>
+<summary>手動で導入する場合</summary>
 
 ```bash
 mkdir -p ~/.local/share/vvsay && cd ~/.local/share/vvsay
-curl -sSfL https://github.com/VOICEVOX/voicevox_core/releases/latest/download/download-osx-arm64 -o download
+curl -sSfL https://github.com/VOICEVOX/voicevox_core/releases/download/0.17.1/download-osx-arm64 -o download
 chmod +x download
 ./download --only onnxruntime dict models --models-pattern '[0-9]*.vvm' -o ~/.local/share/vvsay
 ```
 
-- Intel Mac では `download-osx-x64` を使ってください。
-- `--models-pattern '[0-9]*.vvm'` はトーク用モデルだけを取得します（ソング用は使いません）。
-- GitHub のレートリミットに当たる場合は、コマンドの先頭に `GH_TOKEN=$(gh auth token)` を付けてください。
-- 別の場所に置く場合は、設定ファイルの `assets_dir` で指定します。
+Intel Mac では `download-osx-x64`、Linux では `download-linux-x64` / `download-linux-arm64` を使ってください。
+</details>
 
 ### 利用規約
 
@@ -162,6 +176,8 @@ intonation = 1.2
       --list-narrator                  キャラクターとスタイルの一覧を表示
       --list-style <NARRATOR>          指定したキャラクターのスタイル一覧を表示
       --list-presets                   プリセットの一覧を表示
+      --setup                          公式ダウンローダーで VOICEVOX CORE の実行ファイル類を導入（利用規約への同意を求められます）
+      --accept-terms                   --setup と併用: 利用規約への同意確認に自動で回答（規約を読んだうえでのみ使用）
       --queue                          他の再生が終わるまで待ち、呼び出し順に再生
       --bg                             バックグラウンドで実行（即座に制御を返す）
   -v, --verbose                        詳細出力（VOICEVOX CORE のログと所要時間を表示）

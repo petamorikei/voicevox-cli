@@ -11,6 +11,7 @@ use crate::config::{VoiceOverrides, list_presets, load_config};
 use crate::engine::{Engine, VoiceParams};
 use crate::player::{Player, check_mpv_available};
 use crate::queue::Queue;
+use crate::setup::run_setup;
 use crate::text_splitter::split_text;
 use crate::wav;
 
@@ -90,6 +91,18 @@ pub struct Cli {
     #[arg(long)]
     list_presets: bool,
 
+    /// Download VOICEVOX CORE assets with the official downloader (asks you to accept the terms of use)
+    #[arg(long, conflicts_with_all = [
+        "text", "file", "out", "narrator", "style", "style_id", "preset", "speed", "pitch",
+        "intonation", "volume", "pre_phoneme_length", "post_phoneme_length", "list_narrator",
+        "list_style", "list_presets", "queue", "bg",
+    ])]
+    setup: bool,
+
+    /// With --setup: accept the terms of use without asking (only after you have read them)
+    #[arg(long, requires = "setup")]
+    accept_terms: bool,
+
     /// Wait until other playback finishes, playing in the order of invocation
     #[arg(long)]
     queue: bool,
@@ -146,6 +159,9 @@ pub fn run() -> Result<()> {
         Some(dir) => expand_tilde(dir)?,
         None => default_assets_dir()?,
     };
+    if cli.setup {
+        return run_setup(&assets_dir, cli.accept_terms);
+    }
     let assets = Assets::locate(&assets_dir)?;
 
     if cli.list_narrator {

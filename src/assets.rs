@@ -4,17 +4,10 @@ use voicevox_core::{
     CharacterMeta, StyleId, StyleMeta, StyleType, blocking::Onnxruntime, blocking::VoiceModelFile,
 };
 
-pub const DOWNLOAD_GUIDE: &str = "\
+pub const SETUP_GUIDE: &str = "\
 VOICEVOX CORE assets (ONNX Runtime, Open JTalk dictionary, voice models) are required.
-Download them with the official downloader (you will be asked to accept the terms of use):
-
-  mkdir -p ~/.local/share/vvsay && cd ~/.local/share/vvsay
-  curl -sSfL https://github.com/VOICEVOX/voicevox_core/releases/latest/download/download-osx-arm64 -o download
-  chmod +x download
-  ./download --only onnxruntime dict models --models-pattern '[0-9]*.vvm' -o ~/.local/share/vvsay
-
-Use download-osx-x64 / download-linux-x64 / download-linux-arm64 on other platforms.
-A different location can be set with `assets_dir` in ~/.config/vvsay/config.toml.";
+Run `vvsay --setup` to download them (you will be asked to accept the terms of use).
+See README for manual installation.";
 
 /// Files required to run VOICEVOX CORE.
 #[derive(Debug, Clone)]
@@ -60,10 +53,7 @@ pub fn expand_tilde(path: &str) -> Result<PathBuf> {
 impl Assets {
     pub fn locate(root: &Path) -> Result<Self> {
         let missing = |what: &str| {
-            anyhow::anyhow!(
-                "{what} not found under {}\n\n{DOWNLOAD_GUIDE}",
-                root.display()
-            )
+            anyhow::anyhow!("{what} not found under {}\n\n{SETUP_GUIDE}", root.display())
         };
 
         let onnxruntime = find_onnxruntime(&root.join("onnxruntime").join("lib"))
@@ -251,9 +241,9 @@ mod tests {
     }
 
     #[test]
-    fn missing_assets_mention_download_guide() {
+    fn missing_assets_mention_setup() {
         let dir = tempfile::tempdir().unwrap();
         let err = Assets::locate(dir.path()).unwrap_err().to_string();
-        assert!(err.contains("./download --only onnxruntime dict models"));
+        assert!(err.contains("vvsay --setup"));
     }
 }

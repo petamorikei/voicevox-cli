@@ -39,19 +39,33 @@ cargo install --path .
 ### Downloading VOICEVOX CORE assets
 
 `vvsay` needs the VOICEVOX ONNX Runtime, the Open JTalk dictionary and the voice models (VVM files).
-Download them with the official downloader. **You will be asked to accept the terms of use of the ONNX Runtime and the voice models.**
+Run the following in a terminal:
+
+```bash
+vvsay --setup
+```
+
+It fetches the official VOICEVOX CORE downloader (0.17.1, checksum-verified) and runs it.
+**The downloader asks you to accept the terms of use of the ONNX Runtime and the voice models; read them and answer yourself.**
+vvsay never answers on your behalf by default. To automate setup (e.g. in CI) after reading and agreeing to the terms, run `vvsay --setup --accept-terms`: the terms are still printed, and vvsay answers "yes" to the prompt. If the assets are already installed, it does nothing unless "yes" is given to the re-download question on stdin.
+
+- Assets are installed into `~/.local/share/vvsay` (or `assets_dir` in the configuration file).
+- Only talk models are downloaded (song models are not used).
+- If you hit GitHub's rate limit, run `GH_TOKEN=$(gh auth token) vvsay --setup`.
+- Running it again after installation asks whether to download again.
+
+<details>
+<summary>Manual installation</summary>
 
 ```bash
 mkdir -p ~/.local/share/vvsay && cd ~/.local/share/vvsay
-curl -sSfL https://github.com/VOICEVOX/voicevox_core/releases/latest/download/download-osx-arm64 -o download
+curl -sSfL https://github.com/VOICEVOX/voicevox_core/releases/download/0.17.1/download-osx-arm64 -o download
 chmod +x download
 ./download --only onnxruntime dict models --models-pattern '[0-9]*.vvm' -o ~/.local/share/vvsay
 ```
 
-- Use `download-osx-x64` on Intel Macs.
-- `--models-pattern '[0-9]*.vvm'` downloads talk models only (song models are not used).
-- If you hit GitHub's rate limit, prefix the command with `GH_TOKEN=$(gh auth token)`.
-- To use another location, set `assets_dir` in the configuration file.
+Use `download-osx-x64` on Intel Macs, `download-linux-x64` / `download-linux-arm64` on Linux.
+</details>
 
 ### Terms of use
 
@@ -162,6 +176,8 @@ Options:
       --list-narrator                  Print characters and their styles
       --list-style <NARRATOR>          Print styles of the given character
       --list-presets                   Print available presets
+      --setup                          Download VOICEVOX CORE assets with the official downloader (asks you to accept the terms of use)
+      --accept-terms                   With --setup: accept the terms of use without asking (only after you have read them)
       --queue                          Wait until other playback finishes, playing in the order of invocation
       --bg                             Run in background (return immediately)
   -v, --verbose                        Enable verbose output (show VOICEVOX CORE logs and timings)

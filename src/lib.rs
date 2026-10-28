@@ -4,6 +4,7 @@ pub mod config;
 pub mod engine;
 pub mod player;
 pub mod queue;
+pub mod setup;
 pub mod text_splitter;
 pub mod wav;
 

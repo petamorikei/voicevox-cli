@@ -22,10 +22,9 @@ dirs = "6.0"
 libc = "0.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+sha2 = "0.10"
+tempfile = "3"
 toml = "0.9"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 typed_floats = "1.0.7"
 voicevox_core = { git = "https://github.com/VOICEVOX/voicevox_core.git", tag = "0.17.1", features = ["load-onnxruntime"] }
-
-[dev-dependencies]
-tempfile = "3"

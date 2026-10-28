@@ -30,6 +30,7 @@ Library + binary crate, no `mod.rs`:
 - `src/wav.rs` - WAV parsing/encoding
 - `src/player.rs` - mpv fed with raw PCM through stdin, so sentences can be appended while playing
 - `src/queue.rs` - `--queue` ticket queue shared between processes (JSON state + file lock in `~/.local/state/vvsay`)
+- `src/setup.rs` - `--setup`: fetches the official downloader (version + SHA-256 pinned), runs it with the terminal attached
 
 ## Things to keep in mind
 
@@ -38,4 +39,5 @@ Library + binary crate, no `mod.rs`:
 - **Streaming**: each segment goes through `create_audio_feature` and is then `render`ed in growing slices (0.5 s, 1 s, 3 s, ...), passed to a sink as soon as each slice is ready. The joined slices are bit-identical to `synthesis` of the whole segment (verified), and first audio comes ~0.15 s after the engine is ready regardless of the sentence length.
 - **Queue entries are tied to both vvsay and its mpv**: mpv keeps playing buffered PCM after vvsay is killed, so an entry is pruned only when both PIDs are dead.
 - The downloader may install a different ONNX Runtime version than `Onnxruntime::LIB_RECOMMENDED_VERSIONED_FILENAME`; the library is found by prefix.
+- **Terms of use in `--setup`**: by default stdin is passed through to the downloader and the user answers (piping answers in is allowed by the official downloader; do not block it). `--accept-terms` answers "y" itself; the downloader's pager reads keys from the terminal even with piped stdin, so stdout is piped through vvsay (minus prints the text instead of paging when stdout is not a TTY). The re-download confirmation reads stdin byte by byte so piped answers for the downloader are not consumed. When bumping `voicevox_core`, update `DOWNLOADER_VERSION` and the SHA-256 table in `src/setup.rs` (digests are on the GitHub release) and the manual URLs in the READMEs.
 - Parallel synthesis was measured and rejected: ONNX Runtime already uses all cores (~10% gain at the cost of loading the model per synthesizer).
