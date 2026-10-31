@@ -17,9 +17,9 @@
 
 ## Requirements
 
-- macOS (Linux may work but is not tested)
-- [mpv](https://mpv.io/) for playback (`brew install mpv`)
-- For building: Rust 1.89+ and [CMake](https://cmake.org/) (`brew install cmake`)
+- macOS or Linux. On Linux, arm64 is tested (Debian 12: install, `--setup`, synthesis, and playback through PulseAudio); x64 is not tested yet
+- [mpv](https://mpv.io/) for playback (`brew install mpv`, or the distribution's `mpv` package). On Linux, mpv plays through the desktop session's PipeWire or PulseAudio
+- For building: Rust 1.89+, a C++ compiler, and [CMake](https://cmake.org/) (`brew install cmake`, or `build-essential` and `cmake` on Debian/Ubuntu)
 - VOICEVOX CORE assets (see below)
 
 ## Installation

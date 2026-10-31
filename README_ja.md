@@ -17,9 +17,9 @@
 
 ## 動作要件
 
-- macOS（Linux でも動く可能性はありますが未検証です）
-- 再生用の [mpv](https://mpv.io/)（`brew install mpv`）
-- ビルド用の Rust 1.89 以上と [CMake](https://cmake.org/)（`brew install cmake`）
+- macOS または Linux。Linux は arm64 で検証済みです（Debian 12 でインストール、`--setup`、合成、PulseAudio での再生）。x64 は未検証です
+- 再生用の [mpv](https://mpv.io/)（`brew install mpv`、またはディストリビューションの `mpv` パッケージ）。Linux では、デスクトップのセッションの PipeWire または PulseAudio で再生します
+- ビルド用の Rust 1.89 以上、C++ コンパイラ、[CMake](https://cmake.org/)（`brew install cmake`、Debian/Ubuntu では `build-essential` と `cmake`）
 - VOICEVOX CORE の実行ファイル類（後述）
 
 ## インストール
